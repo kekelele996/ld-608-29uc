@@ -52,9 +52,20 @@ backend/src/routes, controllers, services, models, repositories, middlewares, co
 - 数据库使用命名卷，避免绑定中文路径。
 - 常见问题：端口占用时修改 `.env` 中端口后重启；需要重置数据时执行 `docker compose down -v`。
 
+## 超时判定口径（延误顺延）
+
+登记延误后任务截止时间按以下口径顺延，看板超时卡片与任务列表共用同一套规则：
+
+1. 任务原计划截止时间（`deadline`）**不因登记/关闭延误而改写**；顺延结果另算为「当前生效截止时间」。
+2. 当前生效截止时间 = 原计划截止 + 该航班**尚未关闭**的延误事件分钟数之和；已关闭（`resolved_at` 非空）的延误不参与顺延，关闭后顺延自动失效。
+3. 未签收/未完成的任务按**当前时间**与生效截止比较；已签收/已完成的任务按**实际完成时间**（`actual_finish`，即签收时间）与生效截止比较。
+4. 前端唯一口径实现：`frontend/src/utils/overtime.ts`，看板与任务页通过 `hooks/useTaskOvertime.ts` 共用；后端镜像实现：`backend/src/services/GroundTask.go`（`OpenDelayMinutes` / `EffectiveDeadline`），任务接口响应以 `effective_deadline`、`open_delay_minutes` 字段另算返回。
+5. 任务签收：`POST /api/ground-task/:id/sign-off`，签收时间写入 `actual_finish` 并把状态置为 `SIGNED`；延误登记/关闭：`POST /api/delay-event`、`POST /api/delay-event/:id/close`。
+
 ## 枚举/常量出现位置清单
 
 - GroundTaskType: constants/GroundTaskType、types/GroundTaskType、constructors、logTemplates、errorMessages、筛选器、展示组件/控制器均有引用。
+- GroundTaskStatus: constants/GroundTaskStatus（前端）、backend/src/constants/GroundTaskStatus.go（后端）、constants/statusText、任务列表筛选与展示均有引用。
 - TurnaroundStatus: constants/TurnaroundStatus、types/TurnaroundStatus、constructors、logTemplates、errorMessages、筛选器、展示组件/控制器均有引用。
 - ResourceStatus: constants/ResourceStatus、types/ResourceStatus、constructors、logTemplates、errorMessages、筛选器、展示组件/控制器均有引用。
 

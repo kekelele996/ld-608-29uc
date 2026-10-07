@@ -19,3 +19,33 @@ export async function saveDelayEvent(payload: DelayEvent) {
   console.info("save DelayEvent", payload);
   return payload;
 }
+
+/** 登记延误：新事件 resolved_at 为空（未关闭），登记后立即参与任务截止顺延。 */
+export async function createDelayEvent(payload: DelayEvent): Promise<DelayEvent> {
+  try {
+    const res = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) return await res.json();
+  } catch {
+    // fall through to local fallback
+  }
+  return { ...payload, id: Date.now(), resolved_at: "" };
+}
+
+/** 关闭延误：写入 resolved_at，关闭后不再参与任务截止顺延。 */
+export async function closeDelayEvent(event: DelayEvent, closedAt: string): Promise<DelayEvent> {
+  try {
+    const res = await fetch(`${endpoint}/${event.id}/close`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ closed_at: closedAt })
+    });
+    if (res.ok) return await res.json();
+  } catch {
+    // fall through to local fallback
+  }
+  return { ...event, resolved_at: closedAt };
+}

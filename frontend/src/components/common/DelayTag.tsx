@@ -1,5 +1,4 @@
-import { StatusBadge } from "./StatusBadge";
-
-export function DelayTag({ title = "DelayTag", value = "READY" }: { title?: string; value?: string }) {
-  return <div className="shared-widget"><strong>{title}</strong><StatusBadge value={value} /></div>;
+export function DelayTag({ minutes, closed = false }: { minutes: number; closed?: boolean }) {
+  if (closed) return <span className="delay-tag closed">已关闭</span>;
+  return <span className="delay-tag">顺延 +{minutes} 分钟</span>;
 }

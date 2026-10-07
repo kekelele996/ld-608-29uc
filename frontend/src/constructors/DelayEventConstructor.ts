@@ -1,13 +1,13 @@
 import type { DelayEvent } from "../types/DelayEvent";
 
 export const createDefaultDelayEvent = (overrides: Partial<DelayEvent> = {}): DelayEvent => ({
-  id: 1 as never,
-  turnaround_id: 1 as never,
-  delay_type: "CATERING" as never,
-  minutes: "minutes 1" as never,
-  root_cause: "root cause 1" as never,
-  responsibility_team: "responsibility team 1" as never,
-  resolved_at: "2026-06-11T09:00:00Z" as never,
+  id: 0,
+  turnaround_id: 0,
+  delay_type: "CATERING",
+  minutes: 0,
+  root_cause: "",
+  responsibility_team: "",
+  resolved_at: "",
   ...overrides
 });
 

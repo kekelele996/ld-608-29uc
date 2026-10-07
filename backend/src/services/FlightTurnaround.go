@@ -1,2 +1,10 @@
 package services
-// FlightTurnaround keeps 航班过站 changes coupled across layers.
+
+import (
+	"groundTurn/src/models"
+	"groundTurn/src/repositories"
+)
+
+func ListFlightTurnarounds() []models.FlightTurnaround {
+	return repositories.ListFlightTurnarounds()
+}

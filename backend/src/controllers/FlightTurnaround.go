@@ -1,2 +1,13 @@
 package controllers
-// FlightTurnaround keeps 航班过站 changes coupled across layers.
+
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+
+	"groundTurn/src/services"
+)
+
+func ListFlightTurnaround(c *gin.Context) {
+	c.JSON(http.StatusOK, services.ListFlightTurnarounds())
+}
