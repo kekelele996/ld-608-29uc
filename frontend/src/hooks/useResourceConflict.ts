@@ -1,8 +1,11 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import type { ResourceBooking } from "../types/ResourceBooking";
 
-export function useResourceConflict<T>(rows: T[] = []) {
-  const [page, setPage] = useState(1);
-  const pageSize = 8;
-  const pageRows = useMemo(() => rows.slice((page - 1) * pageSize, page * pageSize), [rows, page]);
-  return { page, setPage, pageSize, pageRows, total: rows.length };
+/** 从预约列表中筛出冲突预约，并给出冲突资源 id 集合（资源页/看板共用）。 */
+export function useResourceConflict(bookings: ResourceBooking[]) {
+  return useMemo(() => {
+    const conflicts = bookings.filter((b) => b.booking_status === "CONFLICT");
+    const conflictResourceIds = new Set(conflicts.map((b) => b.resource_id));
+    return { conflicts, conflictResourceIds, conflictCount: conflicts.length };
+  }, [bookings]);
 }

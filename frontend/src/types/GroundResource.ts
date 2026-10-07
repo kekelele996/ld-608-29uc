@@ -4,6 +4,7 @@ export interface GroundResource {
   resource_type: string;
   location: string;
   availability_status: string;
-  maintenance_due_at: string;
+  status_text: string;
+  maintenance_due_at: string | null;
   owner_team: string;
 }

@@ -1,5 +1,12 @@
 import { StatusBadge } from "./StatusBadge";
 
-export function ConflictBadge({ title = "ConflictBadge", value = "READY" }: { title?: string; value?: string }) {
-  return <div className="shared-widget"><strong>{title}</strong><StatusBadge value={value} /></div>;
+/** 资源预约冲突徽标。 */
+export function ConflictBadge({ reason }: { reason?: string }) {
+  return (
+    <StatusBadge
+      value="CONFLICT"
+      tone="danger"
+      text={reason ? `冲突：${reason}` : "时间窗冲突"}
+    />
+  );
 }

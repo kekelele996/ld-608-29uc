@@ -1,13 +1,18 @@
 import type { DelayEvent } from "../types/DelayEvent";
 
+/** 延误登记表单默认对象：新登记默认未关闭（resolved_at=null），立即顺延。 */
 export const createDefaultDelayEvent = (overrides: Partial<DelayEvent> = {}): DelayEvent => ({
-  id: 1 as never,
-  turnaround_id: 1 as never,
-  delay_type: "CATERING" as never,
-  minutes: "minutes 1" as never,
-  root_cause: "root cause 1" as never,
-  responsibility_team: "responsibility team 1" as never,
-  resolved_at: "2026-06-11T09:00:00Z" as never,
+  id: 0,
+  turnaround_id: 0,
+  flight_no: "",
+  delay_type: "WEATHER",
+  minutes: 15,
+  root_cause: "",
+  responsibility_team: "",
+  created_at: new Date().toISOString(),
+  resolved_at: null,
+  closed: false,
+  open_delay_minutes: 0,
   ...overrides
 });
 
